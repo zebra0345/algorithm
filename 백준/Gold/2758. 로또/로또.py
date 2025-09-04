@@ -1,30 +1,25 @@
 import sys
+
 input = sys.stdin.readline
 
-T = int(input().strip())
+pair = []
+T = int(input())
 
-pairs = []
-max_pick = 0   # 최대 n (뽑는 개수)
-max_val  = 0   # 최대 m (숫자 범위)
-
+max_n = max_m = 0
 for _ in range(T):
-    n, m = map(int, input().split())  # n=뽑는 개수, m=숫자 범위(1..m)
-    pairs.append((n, m))
-    max_pick = max(max_pick, n)
-    max_val  = max(max_val,  m)
+    n, m = map(int, input().split())
+    max_n = max(n, max_n)
+    max_m = max(m, max_m)
+    pair.append((n, m))
 
-# dp[i][j]: 1..j에서 i개 뽑는 경우의 수
-dp = [[0] * (max_val + 1) for _ in range(max_pick + 1)]
+dp = [[0] * (max_m + 1) for _ in range(max_n+1)]
 
-# 아무것도 안 뽑는 경우
-for j in range(max_val + 1):
-    dp[0][j] = 1
+for i in range(0, max_m+1):
+    dp[0][i] = 1
 
-for i in range(1, max_pick + 1):
-    for j in range(1, max_val + 1):
-        dp[i][j] = dp[i][j - 1] + dp[i - 1][j // 2]
+for i in range(1, max_n+1):
+    for j in range(1, max_m+1):
+        dp[i][j] = dp[i][j-1] + dp[i-1][j//2]
 
-result = []
-for n, m in pairs:
-    result.append(str(dp[n][m]))
-print("\n".join(result))
+for n, m in pair:
+    print(dp[n][m])
